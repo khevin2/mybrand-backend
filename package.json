@@ -1,0 +1,31 @@
+{
+  "name": "mybrand-backend",
+  "version": "1.0.0",
+  "description": "The backend of my portofolio app",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "backend",
+    "express",
+    "mongoose",
+    "ATLP",
+    "nodemon"
+  ],
+  "author": "@khevin2",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "cloudinary": "^1.33.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "joi": "^17.7.0",
+    "mongoose": "^6.8.3",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^2.0.20"
+  }
+}

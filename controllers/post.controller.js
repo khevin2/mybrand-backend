@@ -1,4 +1,5 @@
 
+import { upload } from '../utils/fileUpload.js'
 import { Post } from './../models/post.model.js'
 
 
@@ -19,14 +20,16 @@ export async function getPosts(req, res) {
     }
 
 }
-export function addPost(req, res) {
+export async function addPost(req, res) {
     const post = req.body
     try {
+        const photoURL = await upload(req.file?.path)
+        if (photoURL.secure_url == null) throw "Could not upload image properly.."
         let newPost = new Post({
             title: post.title,
             intro: post.intro,
             body: post.body,
-            photo: post.photo,
+            photo: photoURL.secure_url,
             tags: post.tags
         })
         newPost.save((err, result) => {
@@ -87,7 +90,13 @@ export async function updateByID(req, res) {
             res.status(400).json({ message: "There is no post with this ID.." })
             return
         }
-        const updatedPost = Object.assign(post, data)
+        let photoURL
+        if (req.file) {
+            photoURL = await upload(req.file.path)
+            if (photoURL.secure_url == null) throw "Could not upload image properly.."
+        }
+
+        const updatedPost = Object.assign(post, data, { photo: photoURL.secure_url })
         const newPost = await Post.findByIdAndUpdate(id, updatedPost, { new: true })
         if (newPost) res.status(200).json({
             message: "success",

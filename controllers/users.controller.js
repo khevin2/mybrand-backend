@@ -1,3 +1,4 @@
+import CryptoJS from "crypto-js";
 import { upload } from '../utils/fileUpload.js'
 import { Users } from './../models/user.model.js'
 
@@ -95,5 +96,23 @@ export async function deleteOneUser(req, res) {
     } catch (err) {
         console.error(err)
         res.status(500).json({ message: err.message })
+    }
+}
+
+export async function auth(req, res, next) {
+    try {
+        const { email, password } = req.body
+        const user = await Users.findOne({ email })
+        if (user == null) return res.status(400).json({ message: "Email or password invalid.." })
+        let bytes = CryptoJS.AES.decrypt(user.password, process.env.CRPTO_SECRET)
+        const pwd = bytes.toString(CryptoJS.enc.Utf8)
+        if (pwd !== password) return res.status(400).json({ message: "Email or password invalid.." })
+        // jwt stuffs
+
+
+    } catch (err) {
+        res.status(500).json({
+            message: err.message
+        })
     }
 }

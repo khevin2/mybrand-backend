@@ -116,7 +116,7 @@ export async function auth(req, res, next) {
         let bytes = CryptoJS.AES.decrypt(user.password, process.env.CRPTO_SECRET)
         const pwd = bytes.toString(CryptoJS.enc.Utf8)
         if (pwd !== password) return res.status(400).json({ message: "Email or password invalid.." })
-        // jwt stuffs
+        // jwt stuff
 
 
     } catch (err) {

@@ -1,6 +1,7 @@
 import express from 'express'
 import postRoute from './routes/posts.routes.js'
 import usersRoute from './routes/users.routes.js'
+import authRoute from './routes/auth.routes.js'
 import './utils/db_conn.js'
 
 
@@ -13,4 +14,5 @@ app.listen(PORT, () => console.log(`App running on port ${PORT}`))
 
 app.use('/posts', postRoute)
 app.use('/users', usersRoute)
+app.use('/login', authRoute)
 

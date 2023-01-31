@@ -90,13 +90,14 @@ export async function updateByID(req, res) {
             res.status(400).json({ message: "There is no post with this ID.." })
             return
         }
-        let photoURL
+        let photoURL, picture = {}
         if (req.file) {
             photoURL = await upload(req.file.path)
             if (photoURL.secure_url == null) throw "Could not upload image properly.."
+            picture = { photo: photoURL.secure_url }
         }
-
-        const updatedPost = Object.assign(post, data, { photo: photoURL.secure_url })
+        // return console.log({ data, body: req.body, post, picture })
+        const updatedPost = Object.assign(post, data, picture)
         const newPost = await Post.findByIdAndUpdate(id, updatedPost, { new: true })
         if (newPost) res.status(200).json({
             message: "success",

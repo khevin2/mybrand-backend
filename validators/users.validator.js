@@ -66,3 +66,22 @@ export async function validateUserUpdate(req, res, next) {
         })
     }
 }
+export async function validatelogin(req, res, next) {
+    try {
+        const schema = Joi.object({
+            email: Joi.string().email().required().label('email'),
+            password: Joi.string().required().label('password')
+        })
+        const { error } = schema.validate(req.body)
+        if (error) return res.status(400).json({
+            error: error.message,
+            message: "Could not login.."
+        })
+        next()
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({
+            message: err.message
+        })
+    }
+}

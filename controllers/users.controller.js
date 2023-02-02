@@ -1,5 +1,6 @@
 import CryptoJS from "crypto-js";
-import env from 'dotenv'
+import env from 'dotenv';
+import jwt from "jsonwebtoken";
 env.config({ path: './.env' })
 import { upload } from '../utils/fileUpload.js'
 import { Users } from './../models/user.model.js'
@@ -108,20 +109,41 @@ export async function deleteOneUser(req, res) {
     }
 }
 
-export async function auth(req, res, next) {
+export async function auth(req, res) {
     try {
         const { email, password } = req.body
         const user = await Users.findOne({ email })
-        if (user == null) return res.status(400).json({ message: "Email or password invalid.." })
-        let bytes = CryptoJS.AES.decrypt(user.password, process.env.CRPTO_SECRET)
+        if (user == null) return res.status(400).json({ message: "Email or password invalid..1" })
+        let bytes = CryptoJS.AES.decrypt(user.password, process.env.CRYPTO_SECRET)
         const pwd = bytes.toString(CryptoJS.enc.Utf8)
         if (pwd !== password) return res.status(400).json({ message: "Email or password invalid.." })
         // jwt stuff
-
-
+        const authenticatedUser = {
+            names: user.names,
+            id: user._id,
+            email: user.email
+        }
+        const token = jwt.sign(authenticatedUser, process.env.JWT_TOKEN)
+        res.status(200).json({
+            message: "success",
+            token
+        })
     } catch (err) {
+        console.error(err)
         res.status(500).json({
             message: err.message
         })
     }
 }
+
+// export async function logout(req, res) {
+//     try {
+        
+
+//     } catch (err) {
+//         console.error(err)
+//         res.status(500).json({
+//             message: err.message
+//         })
+//     }
+// }

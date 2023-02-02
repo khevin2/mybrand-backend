@@ -4,12 +4,61 @@ import { ValidateUser, validateUserUpdate } from "../validators/users.validator.
 const upload = multer()
 
 import { getAllUsers, addUser, getOneUser, deleteOneUser, updateUser } from './../controllers/users.controller.js'
+import authenticateRoute from "../middlewares/auth.middleware.js";
 const router = express.Router()
 
-router.get('/', getAllUsers)
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      User:
+ *          type: object
+ *          properties:
+ *              _id:
+ *                  type: string
+ *              names:
+ *                  type: string
+ *              email:
+ *                  type: string
+ *              password:
+ *                  type: string
+ *              phone:
+ *                  type: string
+ *              dob:
+ *                  type: date
+ *              photo:
+ *                  type: string
+ *          required:
+ *              - names
+ *              - email
+ *              - password
+ *              - phone
+ *              - dob
+ *              - photo
+ *              
+ */
+
+/**
+ * @swagger
+ * /users:
+ *  get:
+ *      summary: Get a list of all users
+ *      responses:
+ *          '200':
+ *              description: All Users
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/User'
+ *          '500': An error occured
+ */
+
+router.get('/', authenticateRoute, getAllUsers)
 router.post('/', upload.single('photo'), ValidateUser, addUser)
 router.get('/:id', getOneUser)
-router.patch('/:id', upload.single('photo'), validateUserUpdate, updateUser)
-router.delete("/:id", deleteOneUser)
+router.patch('/:id', upload.single('photo'), validateUserUpdate, authenticateRoute, updateUser)
+router.delete("/:id", authenticateRoute, deleteOneUser)
 
 export default router

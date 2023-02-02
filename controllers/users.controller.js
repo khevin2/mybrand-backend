@@ -21,17 +21,17 @@ export async function getAllUsers(req, res) {
     }
 }
 export async function addUser(req, res) {
-    const { names, email, phone, password, dob } = req.body
+    const { names, email, phone, password, dob,photo } = req.body
     try {
-        const photoURL = await upload(req.file.path)
-        if (!photoURL) throw "Could not upload file.."
+        // const photoURL = await upload(req.file.path)
+        // if (!photoURL) throw "Could not upload file.."
         const newUser = new Users({
             names,
             email,
             phone,
             password: CryptoJS.AES.encrypt(password, process.env.CRYPTO_SECRET),
             dob: new Date(dob),
-            photo: photoURL.secure_url
+            photo
         })
         newUser.save((err, result) => {
             if (err) res.status(400).json({ ...err })

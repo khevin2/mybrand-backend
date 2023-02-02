@@ -21,16 +21,16 @@ export async function getPosts(req, res) {
 
 }
 export async function addPost(req, res) {
-    const post = req.body
+    const { title, intro, body, photo, tags } = req.body
     try {
-        const photoURL = await upload(req.file?.path)
-        if (photoURL.secure_url == null) throw "Could not upload image properly.."
+        // const photoURL = await upload(req.file?.path)
+        // if (photoURL.secure_url == null) throw "Could not upload image properly.."
         let newPost = new Post({
-            title: post.title,
-            intro: post.intro,
-            body: post.body,
-            photo: photoURL.secure_url,
-            tags: post.tags
+            title,
+            intro,
+            body,
+            photo,
+            tags
         })
         newPost.save((err, result) => {
             if (err) res.status(400).json({ ...err })
@@ -90,14 +90,14 @@ export async function updateByID(req, res) {
             res.status(400).json({ message: "There is no post with this ID.." })
             return
         }
-        let photoURL, picture = {}
-        if (req.file) {
-            photoURL = await upload(req.file.path)
-            if (photoURL.secure_url == null) throw "Could not upload image properly.."
-            picture = { photo: photoURL.secure_url }
-        }
+        // let photoURL, picture = {}
+        // if (req.file) {
+        //     photoURL = await upload(req.file.path)
+        //     if (photoURL.secure_url == null) throw "Could not upload image properly.."
+        //     picture = { photo: photoURL.secure_url }
+        // }
         // return console.log({ data, body: req.body, post, picture })
-        const updatedPost = Object.assign(post, data, picture)
+        const updatedPost = Object.assign(post, data)
         const newPost = await Post.findByIdAndUpdate(id, updatedPost, { new: true })
         if (newPost) res.status(200).json({
             message: "success",

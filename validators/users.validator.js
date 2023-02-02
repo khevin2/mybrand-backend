@@ -8,7 +8,8 @@ export async function ValidateUser(req, res, next) {
             email: Joi.string().email().required().label('email'),
             phone: Joi.string().min(10).max(10).required().label('phone'),
             password: Joi.string().min(6).max(64).required().label('password'),
-            dob: Joi.date().required().label('dob')
+            dob: Joi.date().required().label('dob'),
+            photo: Joi.string().uri().required().label('photo')
         })
         const { error } = schema.validate(req.body)
         if (error) return res.status(400).json({
@@ -42,7 +43,8 @@ export async function validateUserUpdate(req, res, next) {
             email: Joi.string().email().label('email'),
             phone: Joi.string().min(10).max(10).label('phone'),
             password: Joi.string().min(6).max(64).label('password'),
-            dob: Joi.date().label('dob')
+            dob: Joi.date().label('dob'),
+            photo: Joi.string().uri().label('photo')
         })
         const { error } = schema.validate(req.body)
         if (error) return res.status(400).json({

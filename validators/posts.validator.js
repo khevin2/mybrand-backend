@@ -2,14 +2,14 @@ import Joi from "joi";
 import { Post } from './../models/post.model.js'
 
 export async function validatePost(req, res, next) {
-    console.log(req.body)
     try {
         req.body.tags = JSON.parse(req.body?.tags)
         const schema = Joi.object({
             title: Joi.string().required().label('title'),
             intro: Joi.string().required().label('intro'),
             body: Joi.string().required().label('body'),
-            tags: Joi.array().items(Joi.string()).required().label('tags')
+            tags: Joi.array().items(Joi.string()).required().label('tags'),
+            photo: Joi.string().uri().required().label('photo')
         })
         const { error } = schema.validate(req.body)
         if (error) {
@@ -34,6 +34,7 @@ export async function validatePostUpdate(req, res, next) {
             title: Joi.string().label('title'),
             intro: Joi.string().label('intro'),
             body: Joi.string().label('body'),
+            photo: Joi.string().uri().label('photo'),
             tags: Joi.array().items(Joi.string()).label('tags')
         })
         const { error } = schema.validate(req.body)

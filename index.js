@@ -1,4 +1,5 @@
 import createServer from "./utils/server.js"
+import './utils/db_conn.js'
 
 const app = createServer()
 

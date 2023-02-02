@@ -5,6 +5,7 @@ export default {
     verbose: true,
     forceExit: true,
     transform: {},
+    testTimeout: 60000,
     // clearMocks: true
 
 

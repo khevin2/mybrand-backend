@@ -21,6 +21,7 @@ export async function validatePost(req, res, next) {
         }
         return next()
     } catch (err) {
+        console.error(err)
         res.status(500).json({
             message: err.message
         })
@@ -29,7 +30,7 @@ export async function validatePost(req, res, next) {
 
 export async function validatePostUpdate(req, res, next) {
     try {
-        req.body.tags = JSON.parse(req.body?.tags)
+        req.body.tags = JSON.parse(req.body.tags || '[]')
         const schema = Joi.object({
             title: Joi.string().label('title'),
             intro: Joi.string().label('intro'),
@@ -50,6 +51,21 @@ export async function validatePostUpdate(req, res, next) {
             message: "Post not found.."
         })
         return next()
+    } catch (err) {
+        res.status(500).json({
+            message: err.message
+        })
+    }
+}
+
+export async function validateLike(req, res, next) {
+    try {
+        const postid = req.params.id
+        const post = await Post.findById(postid)
+        if (!post) return res.status(400).json({
+            message: "Could not find a post with this ID.."
+        })
+        next()
     } catch (err) {
         res.status(500).json({
             message: err.message

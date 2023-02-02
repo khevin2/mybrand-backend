@@ -111,3 +111,22 @@ export async function updateByID(req, res) {
         res.status(500).json({ message: err.message })
     }
 }
+
+// Post like
+
+export async function AddLike(req, res) {
+    try {
+        const { id } = req.params
+        const response = await Post.findByIdAndUpdate(id, { $inc: { likes: 1 } }, { new: true })
+        console.log(response)
+        if (!response) return res.status(400).json({ message: 'error' })
+        else res.status(200).json({
+            message: 'success',
+            post: response
+        })
+
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({ message: err.message })
+    }
+}

@@ -1,0 +1,235 @@
+{
+  "swagger": "3.0.0",
+  "definition": {
+    "openapi": "3.0.0",
+    "info": {
+      "title": "My Brand API",
+      "version": "1.0.0",
+      "description": "Swagger documentation for my brand api"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:6001"
+      }
+    ],
+
+    "tags": [
+      {
+        "name": "USER OPERATIONS",
+        "description": "User route operations"
+      },
+      {
+        "name": "POST OPERATIONS",
+        "description": "Post route operations"
+      },
+      {
+        "name": "USER AUTHENTICATION",
+        "description": "Login route"
+      }
+    ],
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "apiKey",
+          "name": "Authorization",
+          "in": "header",
+          "bearerFormat": "JWT",
+          "scheme": "bearer"
+        }
+      },
+      "schemas": {
+        "User": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "names": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            },
+            "dob": {
+              "type": "date"
+            },
+            "photo": {
+              "type": "string"
+            }
+          },
+          "required": ["names", "email", "password", "phone", "dob", "photo"]
+        },
+        "Post": {
+          "type": "object",
+          "required": ["title", "intro", "body", "photo", "tags"],
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Title of a post(every post should have a title!)"
+            },
+            "intro": {
+              "type": "string",
+              "description": "Introduction/ summary of a post"
+            },
+            "body": {
+              "type": "string",
+              "description": "Body of a post(preferably written in MD)"
+            },
+            "tags": {
+              "type": "array",
+              "description": "tags(keys) of a post"
+            },
+            "photo": {
+              "type": "string",
+              "description": "Main photo of a blog"
+            },
+            "likes": {
+              "type": "string",
+              "description": "Number of reaction(likes) on a single post"
+            }
+          },
+          "example": {
+            "title": "Check out my new npm package",
+            "intro": "The recently project on GSM messages is out",
+            "body": "a really long description of my post. Hence post body..",
+            "tags": ["npm", "nodeJS", "GSM"],
+            "photo": "https://picsum.photos/190/90s",
+            "likes": 123
+          }
+        }
+      }
+    },
+    "paths": {
+      "/login": {
+        "post": {
+          "summary": "Login to use private routes",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "required": true
+                    },
+                    "password": {
+                      "type": "string",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Login success..",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string"
+                      },
+                      "token": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": "Could not authenticate",
+            "500": "Server error"
+          }
+        }
+      },
+      "/user": {
+        "get": {
+          "tags": ["USER OPERATIONS"],
+          "summary": "Get a list of all users",
+          "responses": {
+            "200": {
+              "description": "All Users",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            },
+            "500": "An error occured"
+          }
+        }
+      },
+      "/posts": {
+        "get": {
+          "summary": "Get a list of all posts",
+          "tags": ["POST OPERATIONS"],
+          "responses": {
+            "200": {
+              "description": "List of all posts",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Post"
+                    }
+                  }
+                }
+              }
+            },
+            "500": "An error occured",
+            "400": "Bad request"
+          }
+        },
+        "post": {
+          "summary": "Add a new post",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/Post"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Created new post",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Post"
+                    }
+                  }
+                }
+              }
+            },
+            "500": "Server could not process this request properly",
+            "400": "Ensure all fields are well filed"
+          }
+        }
+      }
+    },
+    "security": [{ "bearerAuth": [] }]
+  },
+  "apis": []
+}

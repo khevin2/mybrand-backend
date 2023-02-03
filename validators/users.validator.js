@@ -39,12 +39,12 @@ export async function ValidateUser(req, res, next) {
 export async function validateUserUpdate(req, res, next) {
     try {
         const schema = Joi.object({
-            names: Joi.string().label('names'),
-            email: Joi.string().email().label('email'),
-            phone: Joi.string().min(10).max(10).label('phone'),
-            password: Joi.string().min(6).max(64).label('password'),
-            dob: Joi.date().label('dob'),
-            photo: Joi.string().uri().label('photo')
+            names: Joi.string().empty('').label('names'),
+            email: Joi.string().empty('').email().label('email'),
+            phone: Joi.string().empty('').min(10).max(10).label('phone'),
+            password: Joi.string().empty('').min(6).max(64).label('password'),
+            dob: Joi.date().empty('').label('dob'),
+            photo: Joi.string().empty('').uri().label('photo')
         })
         const { error } = schema.validate(req.body)
         if (error) return res.status(400).json({

@@ -50,8 +50,8 @@ export async function getOneUser(req, res) {
     try {
         const user = await Users.findById(id).select({ password: 0 })
         if (user == null)
-            res.status(200).json({
-                message: "success",
+            res.status(404).json({
+                message: "User Not Found..",
                 length: 0,
                 data: {}
             })
@@ -73,7 +73,7 @@ export async function updateUser(req, res) {
         let photo
         if (req.file) photo = await upload(req.file.path)
         const user = Users.findById(id)
-        if (!user) return res.status(403).json({ message: "User not found.." })
+        if (!user) return res.status(404).json({ message: "User not found.." })
         const encryptedPassword = password && CryptoJS.AES.encrypt(password, process.env.CRYPTO_SECRET).toString()
         let newUser = {
             names: names || user.names,

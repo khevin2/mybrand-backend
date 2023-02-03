@@ -3,7 +3,6 @@ import { Post } from './../models/post.model.js'
 
 export async function validatePost(req, res, next) {
     try {
-        req.body.tags = JSON.parse(req.body?.tags)
         const schema = Joi.object({
             title: Joi.string().required().label('title'),
             intro: Joi.string().required().label('intro'),

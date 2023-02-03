@@ -1,5 +1,4 @@
 {
-  "swagger": "3.0.0",
   "definition": {
     "openapi": "3.0.0",
     "info": {
@@ -12,7 +11,6 @@
         "url": "http://localhost:6001"
       }
     ],
-
     "tags": [
       {
         "name": "USER OPERATIONS",
@@ -32,18 +30,13 @@
         "bearerAuth": {
           "type": "apiKey",
           "name": "Authorization",
-          "in": "header",
-          "bearerFormat": "JWT",
-          "scheme": "bearer"
+          "in": "header"
         }
       },
       "schemas": {
         "User": {
           "type": "object",
           "properties": {
-            "id": {
-              "type": "string"
-            },
             "names": {
               "type": "string"
             },
@@ -57,13 +50,12 @@
               "type": "string"
             },
             "dob": {
-              "type": "date"
+              "type": "string"
             },
             "photo": {
               "type": "string"
             }
-          },
-          "required": ["names", "email", "password", "phone", "dob", "photo"]
+          }
         },
         "Post": {
           "type": "object",
@@ -83,6 +75,9 @@
             },
             "tags": {
               "type": "array",
+              "items": {
+                "type": "string"
+              },
               "description": "tags(keys) of a post"
             },
             "photo": {
@@ -109,6 +104,7 @@
       "/login": {
         "post": {
           "summary": "Login to use private routes",
+          "tags": ["USER AUTHENTICATION"],
           "requestBody": {
             "required": true,
             "content": {
@@ -117,14 +113,13 @@
                   "type": "object",
                   "properties": {
                     "email": {
-                      "type": "string",
-                      "required": true
+                      "type": "string"
                     },
                     "password": {
-                      "type": "string",
-                      "required": true
+                      "type": "string"
                     }
-                  }
+                  },
+                  "required": ["email", "password"]
                 }
               }
             }
@@ -148,12 +143,16 @@
                 }
               }
             },
-            "400": "Could not authenticate",
-            "500": "Server error"
+            "400": {
+              "description": "Could not authenticate"
+            },
+            "500": {
+              "description": "Server error"
+            }
           }
         }
       },
-      "/user": {
+      "/users": {
         "get": {
           "tags": ["USER OPERATIONS"],
           "summary": "Get a list of all users",
@@ -171,7 +170,169 @@
                 }
               }
             },
-            "500": "An error occured"
+            "401": {
+              "description": "Unauthorised/Unauthenticated"
+            },
+            "403": {
+              "description": "Token invalid - Generate a new one"
+            },
+            "500": {
+              "description": "An error occured"
+            }
+          }
+        },
+        "post": {
+          "summary": "Add a new user",
+          "tags": ["USER OPERATIONS"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "User added successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Unable to save"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/users/{id}": {
+        "get": {
+          "summary": "Get a single user by ID",
+          "tags": ["USER OPERATIONS"],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "ID of a user"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User retrieved successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "No user found with this ID"
+            },
+            "500": {
+              "description": "Server Error"
+            }
+          }
+        },
+        "patch": {
+          "summary": "Updates a user",
+          "tags": ["USER OPERATIONS"],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "ID of a user"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "User updated",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Could not update - check your inputs!"
+            },
+            "401": {
+              "description": "Unauthorised/Unauthenticated"
+            },
+            "403": {
+              "description": "Token invalid - Generate a new one"
+            },
+            "404": {
+              "description": "User not found!"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Updates a user",
+          "tags": ["USER OPERATIONS"],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "ID of a user"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User deleted!",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorised/Unauthenticated"
+            },
+            "403": {
+              "description": "Token invalid - Generate a new one"
+            },
+            "500": {
+              "description": "Server error"
+            }
           }
         }
       },
@@ -193,12 +354,17 @@
                 }
               }
             },
-            "500": "An error occured",
-            "400": "Bad request"
+            "400": {
+              "description": "Bad request"
+            },
+            "500": {
+              "description": "An error occured"
+            }
           }
         },
         "post": {
           "summary": "Add a new post",
+          "tags": ["POST OPERATIONS"],
           "requestBody": {
             "required": true,
             "content": {
@@ -223,13 +389,21 @@
                 }
               }
             },
-            "500": "Server could not process this request properly",
-            "400": "Ensure all fields are well filed"
+            "400": {
+              "description": "Ensure all fields are well filed"
+            },
+            "500": {
+              "description": "Server could not process this request properly"
+            }
           }
         }
       }
     },
-    "security": [{ "bearerAuth": [] }]
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ]
   },
   "apis": []
 }

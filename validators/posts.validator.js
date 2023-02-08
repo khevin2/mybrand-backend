@@ -29,7 +29,7 @@ export async function validatePost(req, res, next) {
 
 export async function validatePostUpdate(req, res, next) {
     try {
-        req.body.tags = JSON.parse(req.body.tags || '[]')
+        // req.body.tags = JSON.parse(req.body.tags || '[]')
         const schema = Joi.object({
             title: Joi.string().label('title'),
             intro: Joi.string().label('intro'),

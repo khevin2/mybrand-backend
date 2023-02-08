@@ -9,12 +9,12 @@ export async function validateComment(req, res, next) {
             comment: Joi.string().min(4).required().label('comment')
         })
         const { error } = schema.validate(req.body)
-        if (error) {
-            res.status(400).json({
+        if (error)
+            return res.status(400).json({
                 message: "comment invalid..",
                 error: error.message
             })
-        }
+
         const postid = req.params.id
         const post = await Post.findById(postid)
         if (!post) return res.status(400).json({

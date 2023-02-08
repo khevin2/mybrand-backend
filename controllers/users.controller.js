@@ -34,7 +34,10 @@ export async function addUser(req, res) {
             photo
         })
         newUser.save((err, result) => {
-            if (err) res.status(400).json({ ...err })
+            if (err) {
+                console.log(err)
+                res.status(400).json({ message:err.message })
+            }
             else res.status(201).json({ message: "success", data: result._doc })
         })
 
@@ -66,12 +69,36 @@ export async function getOneUser(req, res) {
         res.status(500).json({ message: err.message })
     }
 }
+
+export async function getUserByEmail(req, res) {
+    try {
+        const email = req.query.email
+        const user = await Users.findOne({email}).select({ password: 0 })
+        if (user == null)
+            res.status(404).json({
+                message: "User Not Found..",
+                length: 0,
+                data: {}
+            })
+        else res.status(200).json({
+            message: "success",
+            length: user.length,
+            data: user
+        })
+        
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({ message: err.message })
+    }
+    
+}
+
+
 export async function updateUser(req, res) {
     try {
         const id = req.params.id
-        const { names, email, phone, password, dob } = req.body
-        let photo
-        if (req.file) photo = await upload(req.file.path)
+        const { names, email, phone, password, dob, photo } = req.body
+        
         const user = Users.findById(id)
         if (!user) return res.status(404).json({ message: "User not found.." })
         const encryptedPassword = password && CryptoJS.AES.encrypt(password, process.env.CRYPTO_SECRET).toString()
@@ -79,7 +106,7 @@ export async function updateUser(req, res) {
             names: names || user.names,
             email: email || user.email,
             phone: phone || user.phone,
-            photo: photo?.secure_url || user.photo,
+            photo: photo || user.photo,
             password: encryptedPassword || user.password,
             dob: dob || user.dob,
             modifiedDate: new Date()

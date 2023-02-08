@@ -10,7 +10,7 @@ export async function addComment(req, res) {
             commentBody: comment,
             postID
         }).save((err, data) => {
-            if (err) return res.status(400).json({ message: 'error', ...err })
+            if (err) return res.status(400).json({ message: err.message, error: true })
             res.status(201).json({ message: "success", data: data._doc })
         })
 

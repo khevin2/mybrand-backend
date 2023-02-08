@@ -119,10 +119,10 @@ export async function AddLike(req, res) {
         const { id } = req.params
         const response = await Post.findByIdAndUpdate(id, { $inc: { likes: 1 } }, { new: true })
         console.log(response)
-        if (!response) return res.status(400).json({ message: 'error' })
+        if (!response) return res.status(400).json({ message: 'error', error: "error" })
         else res.status(200).json({
             message: 'success',
-            post: response
+            data: response
         })
 
     } catch (err) {

@@ -10,6 +10,10 @@ const MessagesSchema = new Schema({
         type: String,
         required: true,
     },
+    subject: {
+        type: String,
+        required: true
+    },
     body: {
         type: String,
         required: true,

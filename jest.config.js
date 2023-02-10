@@ -6,6 +6,7 @@ export default {
     forceExit: true,
     transform: {},
     testTimeout: 60000,
+    collectCoverage: true,
     // clearMocks: true
 
 

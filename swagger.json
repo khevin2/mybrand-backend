@@ -28,6 +28,10 @@
       {
         "name": "USER AUTHENTICATION",
         "description": "Login route"
+      },
+      {
+        "name": "MESSAGES OPERATIONS",
+        "description": "message route operations"
       }
     ],
     "components": {
@@ -42,6 +46,9 @@
         "User": {
           "type": "object",
           "properties": {
+            "id": {
+              "type": "string"
+            },
             "names": {
               "type": "string"
             },
@@ -101,6 +108,27 @@
             "tags": ["npm", "nodeJS", "GSM"],
             "photo": "https://picsum.photos/190/90s",
             "likes": 123
+          }
+        },
+        "Message": {
+          "type": "object",
+          "properties": {
+            "names": {
+              "type": "string",
+              "description": "Name of message sender"
+            },
+            "email": {
+              "type": "string",
+              "description": "email of message sender"
+            },
+            "subject": {
+              "type": "string",
+              "description": "The subject of message"
+            },
+            "body": {
+              "type": "string",
+              "description": "message"
+            }
           }
         }
       }
@@ -402,6 +430,164 @@
             }
           }
         }
+      },
+      "/messages": {
+        "post": {
+          "summary": "Send new message",
+          "tags": ["MESSAGES OPERATIONS"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Message sent successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Message"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Internal Server Error"
+            }
+          }
+        },
+        "get": {
+          "summary": "Get all messages",
+          "tags": ["MESSAGES OPERATIONS"],
+          "responses": {
+            "200": {
+              "description": "Success. Got all messages",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Message"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "403": {
+              "description": "Token expired"
+            },
+            "500": {
+              "description": "Internal Server Error"
+            }
+          }
+        }
+      },
+      "/messages/{id}": {
+        "patch": {
+          "summary": "Reply a message",
+          "tags": ["MESSAGES OPERATIONS"],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "ID of message"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "reply": {
+                      "type": "string",
+                      "description": "Message reply body"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Message replied successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Message"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "403": {
+              "description": "Token expred/invalid"
+            },
+            "500": {
+              "description": "Internal Server Error"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Deletes a message",
+          "tags": ["MESSAGES OPERATIONS"],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "ID of message"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Message deleted successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Message"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "403": {
+              "description": "Token expired/invalid"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
       }
     },
     "security": [
@@ -410,5 +596,6 @@
       }
     ]
   },
+
   "apis": []
 }

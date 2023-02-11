@@ -27,6 +27,11 @@ export async function createMessage(req, res) {
 
 export async function getMessages(req, res) {
     try {
+        if (req.user.userType !== 'admin') return res.status(403).json({
+            message: "Admin only are allowed to access this resource",
+            error: true
+        })
+
         const messages = await Messages.find()
         if (messages) res.status(200).json({
             message: "success",
@@ -45,6 +50,11 @@ export async function getMessages(req, res) {
 
 export async function replyMessage(req, res) {
     try {
+        if (req.user.userType !== 'admin') return res.status(403).json({
+            message: "Admin only are allowed to access this resource",
+            error: true
+        })
+
         const id = req.params.id
         const { reply } = req.body
         const repliedMessage = await Messages.findByIdAndUpdate(id, { reply, replyDate: new Date() }, { new: true })
@@ -64,6 +74,11 @@ export async function replyMessage(req, res) {
 
 export async function deleteMessage(req, res) {
     try {
+        if (req.user.userType !== 'admin') return res.status(403).json({
+            message: "Admin only are allowed to access this resource",
+            error: true
+        })
+
         const id = req.params.id
         const result = await Messages.findByIdAndDelete(id)
         if (result) res.status(200).json({ message: "success", data: result })

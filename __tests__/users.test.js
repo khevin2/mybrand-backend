@@ -20,18 +20,19 @@ afterAll(async () => {
 
 describe('Create a user', () => {
     beforeAll(async () => {
-        await Users.deleteMany({})
+        await Users.deleteMany({ userType: "user" })
     }, 20000)
 
     it('should sign up a user', async () => {
         const user = await supertest(app).post('/users').send({
             names: "cyusa kheven",
-            phone: "0783903252",
-            email: "cyusa.kheven@outlook.com",
+            phone: "0722982335",
+            email: "cyusa.kheven@yahoo.com",
             dob: new Date('02-12-2000'),
             password: '123456',
             photo: "https://picsum.photos/200/200"
         })
+        expect(user.body.message).toContain("success")
         expect(user.status).toBe(201)
 
     })

@@ -27,11 +27,11 @@ router.delete("/:id", authenticateRoute, deletePost);
 router.patch("/:id", upload.none(), validatePostUpdate, authenticateRoute, updateByID);
 
 // Add comment Route
-router.post('/:id/comment', upload.none(), validateComment, addComment)
+router.post('/:id/comment', upload.none(), authenticateRoute, validateComment, addComment)
 // Get comments of a specific post
 router.get('/:id/comment', getComments)
 
 // Add like Route
-router.post('/:id/like', upload.none(), validateLike, AddLike)
+router.post('/:id/like', upload.none(), authenticateRoute, validateLike, AddLike)
 
 export default router;

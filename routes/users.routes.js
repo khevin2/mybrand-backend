@@ -11,7 +11,7 @@ const router = express.Router()
 
 router.get('/', authenticateRoute, getAllUsers)
 router.post('/', upload.single('photo'), ValidateUser, addUser)
-router.get('/email', getUserByEmail)
+router.get('/email', authenticateRoute, getUserByEmail)
 router.get('/:id', getOneUser)
 router.patch('/:id', upload.single('photo'), validateUserUpdate, authenticateRoute, updateUser)
 router.delete("/:id", authenticateRoute, deleteOneUser)

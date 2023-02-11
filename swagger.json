@@ -46,9 +46,6 @@
         "User": {
           "type": "object",
           "properties": {
-            "id": {
-              "type": "string"
-            },
             "names": {
               "type": "string"
             },

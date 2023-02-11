@@ -40,6 +40,10 @@ const UserSchema = Schema({
     dob: {
         type: Date,
         required: true
+    },
+    userType: {
+        type: String,
+        default: 'user'
     }
 })
 

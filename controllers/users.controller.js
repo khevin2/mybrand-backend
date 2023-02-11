@@ -7,6 +7,10 @@ import { Users } from './../models/user.model.js'
 
 export async function getAllUsers(req, res) {
     try {
+        if (req.user.userType !== 'admin') return res.status(403).json({
+            message: "Admin only are allowed to access this resource",
+            error: true
+        })
         const users = await Users.find()
         res.status(200).json({
             message: "success",
@@ -80,6 +84,10 @@ export async function getUserByEmail(req, res) {
                 length: 0,
                 data: {}
             })
+        if (req.user.userType !== 'admin' && req.user._id !== user._id) return res.status(403).json({
+            message: "Admin only are allowed to access this resource",
+            error: true
+        })
         else res.status(200).json({
             message: "success",
             length: user.length,
@@ -96,7 +104,14 @@ export async function getUserByEmail(req, res) {
 
 export async function updateUser(req, res) {
     try {
+        
         const id = req.params.id
+        
+        if (req.user.userType !== 'admin' && req.user._id !== id) return res.status(403).json({
+            message: "Admin only are allowed to access this resource",
+            error: true
+        })
+        
         const { names, email, phone, password, dob, photo } = req.body
         
         const user = Users.findById(id)
@@ -124,6 +139,12 @@ export async function updateUser(req, res) {
 export async function deleteOneUser(req, res) {
     try {
         const id = req.params.id
+
+        if (req.user.userType !== 'admin' && req.user._id !== id) return res.status(403).json({
+            message: "Admin only are allowed to access this resource",
+            error: true
+        })
+
         const data = await Users.findByIdAndDelete(id)
         res.status(200).json({
             message: "success",
@@ -147,8 +168,9 @@ export async function auth(req, res) {
         // jwt stuff
         const authenticatedUser = {
             names: user.names,
-            id: user._id,
-            email: user.email
+            _id: user._id,
+            email: user.email,
+            userType: user.userType
         }
         const token = jwt.sign(authenticatedUser, process.env.JWT_TOKEN)
         res.status(200).json({

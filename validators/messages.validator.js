@@ -11,7 +11,7 @@ export async function validateMessage(req, res, next) {
         })
         const { error } = schema.validate(req.body)
         if (error) {
-            console.error(error)
+            // console.error(error)
             return res.status(400).json({
                 message: "Unable to save this message..",
                 error: error.message
@@ -35,7 +35,7 @@ export async function validateReply(req, res, next) {
         })
         const { error } = schema.validate(req.body)
         if (error) {
-            console.log(error)
+            // console.log(error)
             return res.status(400).json({
                 message: 'Unable to reply this message..',
                 error: error.message

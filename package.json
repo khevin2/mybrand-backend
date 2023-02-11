@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/.bin/jest",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --watchAll",
     "start": "node index.js",
     "dev": "nodemon index.js",
     "lint": "eslint ."

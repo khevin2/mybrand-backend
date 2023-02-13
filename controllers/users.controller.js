@@ -11,7 +11,7 @@ export async function getAllUsers(req, res) {
             message: "Admin only are allowed to access this resource",
             error: true
         })
-        const users = await Users.find()
+        const users = await Users.find().select({password:0})
         res.status(200).json({
             message: "success",
             length: users.length,
@@ -177,6 +177,37 @@ export async function auth(req, res) {
             message: "success",
             token
         })
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({
+            message: err.message
+        })
+    }
+}
+
+export async function changePassword(req, res) {
+    try {
+        const id = req.params.id
+
+        if (req.user.userType !== 'admin' && req.user._id !== id) return res.status(403).json({
+            message: "Admin only are allowed to access this resource",
+            error: true
+        })
+
+        const { password, newPassword } = req.body
+        const user = await Users.findById(id)
+        if (user == null) return res.status(404).json({ message: "User not found" })
+        let bytes = CryptoJS.AES.decrypt(user.password, process.env.CRYPTO_SECRET)
+        const pwd = bytes.toString(CryptoJS.enc.Utf8)
+        if (password !== pwd) return res.status(400).json({ message: "Wrong password.." })
+
+        const encryptedNewPassword = password && CryptoJS.AES.encrypt(newPassword, process.env.CRYPTO_SECRET).toString()
+
+        const updatedUser = await Users.findByIdAndUpdate(id, { password: encryptedNewPassword }, { new: true }).select({ password: 0 })
+        console.log(updatedUser)
+        if (!updatedUser) return res.status(400).json({ message: "Password could not be updated.." })
+        else res.status(200).json({message:"success", data:updatedUser})
+
     } catch (err) {
         console.error(err)
         res.status(500).json({

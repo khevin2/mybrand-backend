@@ -79,12 +79,12 @@ export async function getUserByEmail(req, res) {
         const email = req.query.email
         const user = await Users.findOne({email}).select({ password: 0 })
         if (user == null)
-            res.status(404).json({
+            return res.status(404).json({
                 message: "User Not Found..",
                 length: 0,
                 data: {}
             })
-        if (req.user.userType !== 'admin' && req.user._id !== user._id) return res.status(403).json({
+        if (req.user.userType !== 'admin' && req.user._id != user._id) return res.status(403).json({
             message: "Admin only are allowed to access this resource",
             error: true
         })
@@ -175,7 +175,8 @@ export async function auth(req, res) {
         const token = jwt.sign(authenticatedUser, process.env.JWT_TOKEN)
         res.status(200).json({
             message: "success",
-            token
+            token,
+            userType: user.userType
         })
     } catch (err) {
         console.error(err)

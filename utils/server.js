@@ -6,6 +6,7 @@ import postRoute from '../routes/posts.routes.js'
 import usersRoute from '../routes/users.routes.js'
 import loginRoute from '../routes/auth.routes.js'
 import messagesRoute from "../routes/messages.routes.js"
+import skillsRoute from "../routes/skills.routes.js"
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const swaggerJSON = require('./../swagger.json')
@@ -23,6 +24,7 @@ export default function createServer() {
     app.use('/documentation', swaggerUI.serve, swaggerUI.setup(specs))
     app.use('/posts', postRoute)
     app.use('/users', usersRoute)
+    app.use('/skills', skillsRoute)
     app.use('/messages', messagesRoute)
     app.use('/login', loginRoute)
 

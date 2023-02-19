@@ -9,11 +9,11 @@
     "servers": [
       {
         "url": "http://localhost:6001",
-        "name": "Local Machine"
+        "name": "Local server"
       },
       {
         "url": "https://mybrand-backend.up.railway.app/",
-        "name": "Production Server"
+        "name": "production server"
       }
     ],
     "tags": [
@@ -32,6 +32,10 @@
       {
         "name": "MESSAGES OPERATIONS",
         "description": "message route operations"
+      },
+      {
+        "name": "SKILLS OPERATIONS",
+        "description": "Skills route operations"
       }
     ],
     "components": {
@@ -46,6 +50,9 @@
         "User": {
           "type": "object",
           "properties": {
+            "id": {
+              "type": "string"
+            },
             "names": {
               "type": "string"
             },
@@ -125,6 +132,27 @@
             "body": {
               "type": "string",
               "description": "message"
+            }
+          }
+        },
+        "Skill": {
+          "type": "object",
+          "properties": {
+            "skillname": {
+              "type": "string",
+              "description": "name of a skill"
+            },
+            "skilldesc": {
+              "type": "string",
+              "description": "Description a single skill"
+            },
+            "skillphoto": {
+              "type": "string",
+              "description": "a photo of a skill"
+            },
+            "skillbanner": {
+              "type": "string",
+              "description": "photo(banner) to a single skill"
             }
           }
         }
@@ -567,6 +595,206 @@
                 "application/json": {
                   "schema": {
                     "$ref": "#/components/schemas/Message"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "403": {
+              "description": "Token expired/invalid"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/skills": {
+        "get": {
+          "summary": "Get all skils in array",
+          "tags": ["SKILLS OPERATIONS"],
+          "responses": {
+            "200": {
+              "description": "List of skills received",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Skill"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "403": {
+              "description": "Token expired/invalid"
+            },
+            "404": {
+              "description": "No skill found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "post": {
+          "summary": "send a new skill",
+          "tags": ["SKILLS OPERATIONS"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/Skill"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Skill added successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Skill"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "403": {
+              "description": "Token expired/invalid"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/skills/{id}": {
+        "patch": {
+          "summary": "Updates an existing skill",
+          "tags": ["SKILLS OPERATIONS"],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "ID of skill"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/Skill"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "skill updated successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Skill"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "403": {
+              "description": "Token expired/invalid"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "get": {
+          "summary": "retreive a single skill by ID",
+          "tags": ["SKILLS OPERATIONS"],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "ID of skill"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "skill retrieved successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Skill"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "403": {
+              "description": "Token expired/invalid"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Deletes a single skill by ID",
+          "tags": ["SKILLS OPERATIONS"],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "ID of skill"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "skill deleted successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Skill"
                   }
                 }
               }

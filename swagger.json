@@ -9,11 +9,11 @@
     "servers": [
       {
         "url": "http://localhost:6001",
-        "name": "Local server"
+        "description": "Local server"
       },
       {
         "url": "https://mybrand-backend.up.railway.app/",
-        "name": "production server"
+        "description": "production server"
       }
     ],
     "tags": [
@@ -36,6 +36,10 @@
       {
         "name": "SKILLS OPERATIONS",
         "description": "Skills route operations"
+      },
+      {
+        "name": "WORKS OPERATIONS",
+        "description": "Works route operations"
       }
     ],
     "components": {
@@ -153,6 +157,33 @@
             "skillbanner": {
               "type": "string",
               "description": "photo(banner) to a single skill"
+            }
+          }
+        },
+        "Work": {
+          "type": "object",
+          "properties": {
+            "workname": {
+              "type": "string",
+              "description": "name of a work"
+            },
+            "workdesc": {
+              "type": "string",
+              "description": "Description a single work"
+            },
+            "workimg": {
+              "type": "string",
+              "description": "a photo of a work(like screenshoot)"
+            },
+            "link_to_project": {
+              "type": "string",
+              "description": "link of work like homepage"
+            },
+            "frameworks": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           }
         }
@@ -795,6 +826,206 @@
                 "application/json": {
                   "schema": {
                     "$ref": "#/components/schemas/Skill"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "403": {
+              "description": "Token expired/invalid"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/works": {
+        "get": {
+          "summary": "Get all works in array",
+          "tags": ["WORKS OPERATIONS"],
+          "responses": {
+            "200": {
+              "description": "List of works received",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Work"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "403": {
+              "description": "Token expired/invalid"
+            },
+            "404": {
+              "description": "No work found"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "post": {
+          "summary": "send a new work",
+          "tags": ["WORKS OPERATIONS"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/Work"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Work added successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Work"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "403": {
+              "description": "Token expired/invalid"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      },
+      "/works/{id}": {
+        "patch": {
+          "summary": "Updates an existing work",
+          "tags": ["WORKS OPERATIONS"],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "ID of work"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/Work"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "work updated successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Work"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "403": {
+              "description": "Token expired/invalid"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "get": {
+          "summary": "retreive a single skill by ID",
+          "tags": ["WORKS OPERATIONS"],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "ID of work"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "work retrieved successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Work"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Unauthorized"
+            },
+            "403": {
+              "description": "Token expired/invalid"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Deletes a single work by ID",
+          "tags": ["WORKS OPERATIONS"],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "string"
+              },
+              "required": true,
+              "description": "ID of work"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "work deleted successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Work"
                   }
                 }
               }
